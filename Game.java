@@ -1,35 +1,53 @@
 import java.util.*;
 import java.io.*;
+import java.lang.reflect.Array;
+
 import javax.swing.*;  
 public class Game{
     public static String[] word;
-public static void main(String[] args) {
+    public static int lives = 6;
+public Game(){
+    initialize();
+    rungame();
+    
+    System.out.println("No Errors");
+}
+    public static void main(String[] args) {
     initialize();
     rungame();
     
     System.out.println("No Errors");
 
 }
+public  int get_Lives(){
+    return lives;
+}
 public static void rungame(){
     System.out.println("WORD TO GFUESS:" + Arrays.toString(word));
     ArrayList<String> guesses = new ArrayList<>();
     ArrayList<String> wordl = new ArrayList<>(Arrays.asList(word));
+    ArrayList<String> correct_word = new ArrayList<>(Arrays.asList(word));
     ArrayList<String> display_word = setdisplay(wordl);
-    int lives = 6;
+    
     while (lives > 0){
+    
     String guess = get_guess();
-    guesses.add(guess);
     System.out.println("GUESSES:" + guesses);
     System.out.println("DISPLAY:" + display_word);
+    guesses.add(guess);
     if (wordl.contains(guess) == true){
         JOptionPane.showMessageDialog (null, "Correct Guess!", "Title", JOptionPane.INFORMATION_MESSAGE);
         while (wordl.contains(guess) == true){
             int index = wordl.indexOf(guess);
             display_word.set(index, guess);
             wordl.set(index, null);
-            if (wordl.equals(display_word)){
+            System.out.println("Checking equality of: " + wordl + display_word);
+            if (correct_word.equals(display_word) == true){
+
                 JOptionPane.showMessageDialog (null, "YOU WIN!", "Title", JOptionPane.INFORMATION_MESSAGE);
                 return;
+            } else {
+                System.out.println("NOT EQUAL");
             }
         }
     } else {

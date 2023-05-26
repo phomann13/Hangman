@@ -1,36 +1,36 @@
 import java.util.*;
 import java.io.*;
 import java.lang.reflect.Array;
-
 import javax.swing.*;  
-public class Game{
+
+public class Game {
     public static String[] word;
     public static int lives = 6;
-public Game(){
-    initialize();
-    rungame();
+    public ArrayList<String> display_word;
+    ModelObserver observer;
+public static void main(String[] args) {
     
-    System.out.println("No Errors");
 }
-    public static void main(String[] args) {
+public Game(ArrayList<String> display_word, ModelObserver modelObserver){
+    this.display_word = display_word;
+    observer = modelObserver;
     initialize();
-    rungame();
-    
     System.out.println("No Errors");
-
 }
 public  int get_Lives(){
     return lives;
 }
-public static void rungame(){
-    System.out.println("WORD TO GFUESS:" + Arrays.toString(word));
+
+
+public final void rungame(){
+    System.out.println("WORD TO GUESS:" + Arrays.toString(word));
     ArrayList<String> guesses = new ArrayList<>();
     ArrayList<String> wordl = new ArrayList<>(Arrays.asList(word));
     ArrayList<String> correct_word = new ArrayList<>(Arrays.asList(word));
     ArrayList<String> display_word = setdisplay(wordl);
+    System.out.print("After calling setDsipaly" + display_word);
     
     while (lives > 0){
-    
     String guess = get_guess();
     System.out.println("GUESSES:" + guesses);
     System.out.println("DISPLAY:" + display_word);
@@ -40,8 +40,11 @@ public static void rungame(){
         while (wordl.contains(guess) == true){
             int index = wordl.indexOf(guess);
             display_word.set(index, guess);
+            observer.modelChanged();
+            System.out.println("After setting: " + display_word);
             wordl.set(index, null);
-            System.out.println("Checking equality of: " + wordl + display_word);
+            //repaint();
+            System.out.println("Checking equality of: " + correct_word + display_word);
             if (correct_word.equals(display_word) == true){
 
                 JOptionPane.showMessageDialog (null, "YOU WIN!", "Title", JOptionPane.INFORMATION_MESSAGE);
@@ -65,8 +68,11 @@ public static void rungame(){
 public static ArrayList<String>  setdisplay(ArrayList<String> word){
     ArrayList<String> display = new ArrayList<>();
     for (String e : word){
-        display.add(null);
+        display.add("_");
     }
+    
+    
+    System.out.println("Inside of setdisplay" + display);
     return display;
 }
 
@@ -95,11 +101,16 @@ public static void initialize(){
     boolean internet = false; //do you have an internet connection?
     int length = 4; //joptionpane for word length between two given ranges
     ArrayList<String> word_list = new ArrayList<>();
+    ArrayList<String> display_word = new ArrayList<>();
     if (internet == false){
     word_list = generate_word_list();
     String s_word = game_word(length, word_list);
     word = new String[s_word.length()];
-     word  = s_word.split("");
+    word  = s_word.split("");
+    for(int i = 0; i < word.length; i++){
+        System.out.print("Char is: " + word[i] );
+        display_word.add("_");
+    }
     }
 }
 
@@ -140,3 +151,4 @@ public static ArrayList<String> generate_word_list(){
 
 }
 }
+
